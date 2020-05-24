@@ -1,0 +1,16 @@
+#leftmenuinner{
+	top:0;
+}
+.setting_item li{
+	font-size:160%;
+	margin:0.3em;
+}
+
+.setting_item li ul{
+	
+}
+
+.setting_item li ul li{
+	font-size:50%;
+	padding-left:1em;
+}
