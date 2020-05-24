@@ -23,6 +23,14 @@ function note_replace(strIn){
 	return(output);
 }
 
+
+function term_init(){
+	
+}
+var str_term_fun_word_link="term_show_win";
+function term_word_link_fun(fun_name){
+	str_term_fun_word_link = fun_name;
+}
 //将存储状态的字符串转换为预显示字符串
 //设置状态为 0：未处理的原始状态
 function term_std_str_to_tran(strIn){
@@ -84,7 +92,7 @@ function term_get_my_std_str(strMean){
 }
 
 function note_lookup(word,showto){
-	$("#"+showto).load("../term/term.php?op=search&word="+word,function(responseTxt,statusTxt,xhr){
+	$("#"+showto).load("../term/term.php?op=search&word="+word+"&username="+getCookie("username"),function(responseTxt,statusTxt,xhr){
     if(statusTxt=="success"){
 		$(".term_note").each(function(index,element){
 			$(this).html(note_init($(this).html()));
@@ -282,9 +290,10 @@ function term_data_save(guid){
 		var strWord=$("#term_edit_word_"+guid).val();
 		var strMean=$("#term_edit_mean_"+guid).val();
 		var strMean2=$("#term_edit_mean2_"+guid).val();
+		var strTag=$("#term_edit_tag_"+guid).val();
 		var strNote=$("#term_edit_note_"+guid).val();
 	}
-	$.get("term.php",
+	$.get("../term/term.php",
 	{
 		op:"save",
 		guid:guid,
@@ -292,7 +301,8 @@ function term_data_save(guid){
 		mean:strMean,
 		mean2:strMean2,
 		tag:strTag,
-		note:strNote
+		note:strNote,
+		username:getCookie("username")
 	},
 	function(data,status){
 		try{
@@ -505,7 +515,7 @@ function term_updata_translation(){
 					}
 				}
 
-				noteText=noteText.replace("[","<span class='"+linkclass+"' onclick=\"term_show_win('"+guid+"')\">");
+				noteText=noteText.replace("[","<span class='"+linkclass+"' onclick=\""+str_term_fun_word_link+"('"+guid+"','"+pali+"')\">");
 				noteText=noteText.replace("]","</span>");
 				noteText=noteText.replace("%mean%","<span class='term_mean'>"+mean+"</span>");
 				noteText=noteText.replace("%pali%","<span class='term_pali'>"+pali+"</span>");
@@ -524,7 +534,7 @@ function term_updata_translation(){
 				}
 			}
 			else{
-				noteText="<span class='"+linkclass+"'  onclick=\"term_show_win('','"+termText+"')\">"+termText+"</span>";
+				noteText="<span class='"+linkclass+"'  onclick=\""+str_term_fun_word_link+"('','"+termText+"')\">"+termText+"</span>";
 			}
 			$(this).html(noteText);
 		}
@@ -633,7 +643,12 @@ function term_tmp(type,tmp){
 
 function term_add_new(keyword){
 	document.getElementById("term_win").style.display="none";
+	
+	tab_click_b('sys_term','tab_rb_sys_term',right_panal_slide_toggle,'tab_rb_sys_term');
 	editor_show_right_tool_bar(true);
-	tab_click_b('term_dict','tab_rb_dict');
 	note_lookup(keyword,"term_dict");
+}
+
+function term_show_new(){
+	$("#term_new_recorder").slideToggle();
 }

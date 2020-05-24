@@ -47,7 +47,9 @@ $sun_h_degree=pi()/2-abs(($atitude/180*pi()-$sun_angle));
 //蒙氣差(horizontal refraction)修正值
 $hori_ref=37/60/180*2*pi();
 $hori_ref_real=asin(sin($hori_ref)/sin($sun_h_degree));
-$delta_t=$hori_ref_real*(12*3600/pi());
+//$delta_t=$hori_ref_real*(12*3600/pi());
+$delta_t_A=$sun_info['civil_twilight_begin']-$sun_info['astronomical_twilight_begin']+$sun_info['nautical_twilight_begin']-$sun_info['sunrise'];
+$delta_t=$delta_t_A;
 /**
  * [$Unix_dawn description]
  * @var [type]

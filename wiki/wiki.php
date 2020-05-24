@@ -96,6 +96,11 @@ else{
 		background-color: #80808029;
 		padding: 0.5em;
 	}
+	note .ref{
+		text-align: right;
+		padding: 5px;
+		font-size: 80%;
+	}
 	.term_block_bar {
 		display: flex;
 		justify-content: space-between;
@@ -132,6 +137,9 @@ else{
 		font-weight: 500;
 		margin: 0 8px;
 	}
+	.term_link {
+    cursor: pointer;
+	}
 }
 	</style>
 <body class="reader_body" onload="<?php
@@ -142,6 +150,9 @@ else if(isset($_get_word)){
 echo "wiki_load_word('{$_get_word}')";
 }
 ?>">
+<script>
+term_word_link_fun("wiki_goto_word");
+</script>
 <div id="head_bar" >
 	<div id="wiki_search" style="width:20em;">
 		<div>
