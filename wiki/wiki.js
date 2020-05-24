@@ -24,7 +24,9 @@ function wiki_load_id(guid){
 function wiki_load_word(word){
 	term_get_word_to_div(word,"wiki_contents",wiki_word_loaded);
 }
-
+function wiki_goto_word(guid,strWord){
+	window.open("wiki.php?word="+strWord,"_blank");
+}
 function wiki_word_loaded(wordlist){
 	$("#doc_title").text(wordlist[0].word+"["+wordlist[0].meaning+"]-圣典百科");
 }

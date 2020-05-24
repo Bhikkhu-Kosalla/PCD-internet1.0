@@ -1,6 +1,7 @@
 
+	
 	function ntf_init(){
-	var divNotify=document.createElement("div");
+		var divNotify=document.createElement("div");
 		var typ=document.createAttribute("class");
 		
 		typ.nodeValue="pcd_notify";
@@ -9,7 +10,7 @@
 		var typId=document.createAttribute("id");
 		typId.nodeValue="id_pcd_notify";
 		divNotify.attributes.setNamedItem(typId);
-	
+
 		var body=document.getElementsByTagName("body")[0];
 		body.appendChild(divNotify);
 		divNotify.style.display="none";

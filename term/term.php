@@ -1,10 +1,13 @@
 <?php
 //查询term字典
+
 require_once "../path.php";
 require_once "../public/_pdo.php";
+require_once '../public/load_lang.php';
+require_once '../public/function.php';
 
 //is login
-if(isset($_COOKIE["username"]) && !empty($_COOKIE["username"])){
+if(isset($_COOKIE["username"])){
 	$username = $_COOKIE["username"];
 }
 else{
@@ -24,6 +27,10 @@ if(isset($_GET["word"])){
 
 if(isset($_GET["guid"])){
 	$_guid=$_GET["guid"];
+}
+
+if(isset($_GET["username"])){
+	$username=$_GET["username"];
 }
 
 global $PDO;
@@ -121,10 +128,16 @@ switch($op){
 	}
 	case "search":
 	{
+		if(!isset($word)){
+			return;
+		}
+		if(trim($word)==""){
+			return;
+		}
+		echo"<div class='pali'>{$word}</div>";
 		//查本人数据
 		echo "<div></div>";//My Term
 		$query = "select * from term  where \"word\" = ".$PDO->quote($word)." AND \"owner\"= ".$PDO->quote($username)." limit 0,30";
-		echo $query;
 		$Fetch = PDO_FetchAll($query);
 		$iFetch=count($Fetch);
 		$count_return+=$iFetch;
@@ -135,8 +148,9 @@ switch($op){
 				$dict_list[$guid]=$Fetch[$i]["owner"];
 				echo "<div class='dict_word'>";
 				echo "<a name='ref_dict_$guid'></a>";
-				echo"<div class='dict'>$word</div>";
 				echo "<div id='term_dict_my_$guid'>";
+				echo "<div class='dict'>Your</div>";
+				echo "<div class='tag'>{$Fetch[$i]["tag"]}</div>";
 				echo "<div class='mean'>".$mean."</div>";
 				echo "<div class='other_mean'>".$Fetch[$i]["other_meaning"]."</div>";
 				echo "<div class='term_note' status=0>".$Fetch[$i]["note"]."</div>";
@@ -144,30 +158,34 @@ switch($op){
 				//编辑词条表单
 				echo "<div id='term_dict_my_edit_$guid' style='display:none'>";
 				echo "<input type='hidden' id='term_edit_word_$guid' value='$word' />";
-				echo "<div class='mean'><input type='input' id='term_edit_mean_$guid'  placeholder='".$module_gui_str['editor']['1010']."'value='$mean' /></div>";//'意思'
-				echo "<div class='other_mean'><input type='input' id='term_edit_mean2_$guid'  placeholder=".$module_gui_str['editor']['1120']." value='".$Fetch[$i]["other_meaning"]."' /></div>";//'备选意思（可选项）'
+				echo "<div class='mean'><input type='input' id='term_edit_mean_{$guid}'  placeholder='{$_local->gui->meaning}' value='$mean' /></div>";//'意思'
+				echo "<div class='other_mean'><input type='input' id='term_edit_mean2_{$guid}'  placeholder='{$_local->gui->other_meaning}' value='".$Fetch[$i]["other_meaning"]."' /></div>";//'备选意思（可选项）'
+				echo "<div class='tag'><input type='input' id='term_edit_tag_{$guid}'  placeholder='{$_local->gui->other_tag}' value='".$Fetch[$i]["tag"]."' /></div>";//'备选意思（可选项）'
 				echo "<div class='note'><textarea  id='term_edit_note_$guid'  placeholder='".$module_gui_str['editor']['1043']."'>".$Fetch[$i]["note"]."</textarea></div>";//'注解'
 				echo "</div>";
 				echo "<div id='term_edit_btn1_$guid'>";
-				echo "<button onclick=\"term_apply('$guid')\">".$module_gui_str['editor_layout']['1003']."</button>";//Apply
-				echo "<button onclick=\"term_edit('$guid')\">".$module_gui_str['editor']['1002']."</button>";//Edit
+				//echo "<button onclick=\"term_apply('$guid')\">{$_local->gui->apply}</button>";//Apply
+				echo "<button onclick=\"term_edit('$guid')\">{$_local->gui->edit}</button>";//Edit
 				echo "</div>";
-				echo "<div id='term_edit_btn2_$guid'  style='display:none'>";
-				echo "<button onclick=\"term_data_esc_edit('$guid')\">".$module_gui_str['editor']['1028']."</button>";//Cancel
-				echo "<button onclick=\"term_data_save('$guid')\">".$module_gui_str['editor']['1017']."</button>";//保存
+				echo "<div id='term_edit_btn2_{$guid}'  style='display:none'>";
+				echo "<button onclick=\"term_data_esc_edit('$guid')\">{$_local->gui->cancel}</button>";//Cancel
+				echo "<button onclick=\"term_data_save('$guid')\">{$_local->gui->save}</button>";//保存
 				echo "</div>";
 				echo "</div>";
 			}
 		}
 		//新建词条
 		echo "<div class='dict_word'>";
+		echo "<button onclick=\"term_show_new()\">{$_local->gui->new}</button>";
+		echo "<div id='term_new_recorder' style='display:none;'>";
 		echo "<div class='dict'>".$module_gui_str['editor']['1121']."</div>";//New Techinc Term
-		echo "<div class='mean'>巴利拼写：<input type='input' placeholder=".$module_gui_str['editor']['1119']." id='term_new_word' value='{$word}' /></div>";//'拼写'
-		echo "<div class='mean'>意思<input type='input' placeholder='".$module_gui_str["editor"]["1010"]."' id='term_new_mean'/></div>";//'意思'
-		echo "<div class='other_mean'>第二意思：<input type='input'  placeholder='".$module_gui_str['editor']['1120']."' id='term_new_mean2'/></div>";//'备选意思（可选项）'
-		echo "<div class='tag'>分类：<input type='input'  placeholder='".$module_gui_str['tools']['1005']."' id='term_new_tag'/></div>";//'标签'
-		echo "<div class='note'>注解：<textarea width='100%' height='3em'  placeholder='".$module_gui_str['editor']['1043']."' id='term_new_note'></textarea></div>";//'注解'
-		echo "<button onclick=\"term_data_save('')\">".$module_gui_str['editor']['1017']."</button>";//保存
+		echo "<div class='mean'>{$_local->gui->pāli}：<input type='input' placeholder='{$_local->gui->pāli}' id='term_new_word' value='{$word}' /></div>";//'拼写'
+		echo "<div class='mean'>{$_local->gui->meaning}<input type='input' placeholder='{$_local->gui->meaning}' id='term_new_mean'/></div>";//'意思'
+		echo "<div class='other_mean'>{$_local->gui->other_meaning}：<input type='input'  placeholder='{$_local->gui->other_meaning}' id='term_new_mean2'/></div>";//'备选意思（可选项）'
+		echo "<div class='tag'>{$_local->gui->tag}：<input type='input'  placeholder='{$_local->gui->tag}' id='term_new_tag'/></div>";//'标签'
+		echo "<div class='note'>{$_local->gui->note}：<textarea width='100%' height='3em'  placeholder='{$_local->gui->note}' id='term_new_note'></textarea></div>";//'注解'
+		echo "<button onclick=\"term_data_save('')\">{$_local->gui->save}</button>";//保存
+		echo "</div>";
 		echo "</div>";
 
 		
@@ -188,13 +206,14 @@ switch($op){
 				echo "<div class='mean'>".$mean."</div>";
 				echo "<div class='other_mean'>".$Fetch[$i]["other_meaning"]."</div>";
 				echo "<div class='term_note'>".$Fetch[$i]["note"]."</div>";
-				echo "<button onclick=\"term_data_copy_to_me($guid)\">".$module_gui_str['editor']['1123']."</button>";//复制
+				echo "<button onclick=\"term_data_copy_to_me($guid)\">{$_local->gui->copy}</button>";//复制
 				echo "</div>";
 			}
 		}
 
 	
 		//查内容
+		/*
 		if($count_return<2){
 			$word1=$org_word;
 			$wordInMean="%$org_word%";
@@ -234,28 +253,35 @@ switch($op){
 				}
 			}		
 		}
+		*/
 		//查内容结束
 
 		echo "<div id='dictlist'>";
-		foreach($dict_list as $x=>$x_value) {
-		  echo "<a href='#ref_dict_$x'>$x_value</a><br/>";
-		}
 		echo "</div>";
 		
 		break;
 	}
 	case "save":
 	{
+		$currTime=sprintf("%d",microtime(true)*1000);
+		if(isset($_GET["modify_time"])){
+			$mTime=$_GET["modify_time"];
+		}
+		else{
+			$mTime=time();
+		}
 		if($_GET["guid"]!=""){
 			$mean=$_GET["mean"];
 			$query="UPDATE term SET meaning='$mean' ,
 									other_meaning='".$_GET["mean2"]."' ,
+									tag='".$_GET["tag"]."' ,
+									receive_time='".time()."' ,
+									modify_time='$mTime' ,
 									note='".$_GET["note"]."' 
 							where guid='".$_GET["guid"]."'";
 		}
 		else{
-			$newGuid=GUIDv4();
-			$newGuid=str_replace("-","",$newGuid);
+			$newGuid=UUID::v4();
 			$word=$_GET["word"];
 			$worden=pali2english($word);
 			$mean=$_GET["mean"];
@@ -275,9 +301,8 @@ switch($op){
 											'$username', 
 											'1',
 											'zh',
-											'0',
-											'0',
-											'0')";		
+											'$time',
+											'$time')";		
 		}
 			$stmt = @PDO_Execute($query);
 			$respond=array("status"=>0,"message"=>"");
@@ -305,7 +330,7 @@ switch($op){
 			$query="INSERT INTO term ('id','guid','word','word_en','meaning','other_meaning','note','tag','create_time','owner','hit') VALUES (null,?,?,?,?,?,?,?,".time().",'$username',1)";
 			$stmt = $PDO->prepare($query);
 			{
-			$stmt->execute(array(GUIDv4(false),
+			$stmt->execute(array(UUID::v4,
 								$Fetch[0]["word"],
 								$Fetch[0]["word_en"],
 								$Fetch[0]["meaning"],
@@ -337,12 +362,7 @@ switch($op){
 		$query = "select * from term  where \"word\" in {$words}  limit 0,1000";
 		$Fetch = PDO_FetchAll($query);
 		$iFetch=count($Fetch);
-		if($iFetch>0){
-			echo json_encode($Fetch, JSON_UNESCAPED_UNICODE);
-		}	
-		else{
-			echo "[]";
-		}			
+		echo json_encode($Fetch, JSON_UNESCAPED_UNICODE);
 		break;
 	}
 	case "sync":
@@ -351,16 +371,12 @@ switch($op){
 		$query = "select guid,modify_time from term  where receive_time>'{$time}' limit 0,1000";
 		$Fetch = PDO_FetchAll($query);
 		$iFetch=count($Fetch);
-		if($iFetch>0){
-			echo json_encode($Fetch, JSON_UNESCAPED_UNICODE);
-		}	
-		else{
-			echo "[]";
-		}
+		echo json_encode($Fetch, JSON_UNESCAPED_UNICODE);
 		break;
 	}
 	case "get":
 	{
+		$Fetch = array();
 		if(isset($guid)){
 			$query = "select * from term  where \"guid\" = '{$guid}'";
 		}
@@ -373,12 +389,8 @@ switch($op){
 		}
 		$Fetch = PDO_FetchAll($query);
 		$iFetch=count($Fetch);
-		if($iFetch>0){
-			echo json_encode($Fetch, JSON_UNESCAPED_UNICODE);
-		}	
-		else{
-			echo "[]";
-		}		
+		echo json_encode($Fetch, JSON_UNESCAPED_UNICODE);
+
 		break;
 	}
 	
