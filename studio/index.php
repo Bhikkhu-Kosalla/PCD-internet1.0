@@ -192,7 +192,7 @@ else{
 					</div>
 				</div>
 				<div>
-				<input id="keyword" type="input"  placeholder=<?php echo $module_gui_str['editor']['1114'].$module_gui_str['editor']['1115'];?>  onkeyup="file_search_keyup()"/>
+				<input id="keyword" type="input"  placeholder=<?php echo $module_gui_str['editor']['1114'].$module_gui_str['editor']['1115'];?>; onkeyup="file_search_keyup()" />
 				</div>
 
 				<div>

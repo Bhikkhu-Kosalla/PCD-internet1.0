@@ -56,15 +56,14 @@
 		<!-- tool bar begin-->
 		<div class='index_toolbar'>
 			<div id="index_nav">
-			<svg class="icon" style="    fill: #f1ca23;height: 2em;">
-				<use xlink:href="../public/images/svg/ic_logo1.svg#ic_logo_small"></use>
+			<svg class="icon" style="    fill: #f1ca23;height: 2em;width: 8.5em;">
+				<use xlink:href="../public/images/svg/wikipali_banner.svg#wikipali_banner"></use>
 			</svg>
-			Studio
 			</div>
 			<div >
 					<div>
 						<div>
-							<input id="search_input" type="input" placeholder=<?php echo $_local->gui->serach;?> onkeyup="search_input_keyup(event,this)" style="margin-left: 0.5em;width: 40em;max-width: 80%" onfocus="search_input_onfocus()">
+							<input id="search_input" type="input" placeholder=<?php echo $_local->gui->serach;?>; onkeyup="search_input_keyup(event,this)" style="margin-left: 0.5em;width: 40em;max-width: 80%" onfocus="search_input_onfocus()">
 						</div>
 						<div id="pre_search_result">
 							<div id="pre_search_chapter" class="pre_serach_block">

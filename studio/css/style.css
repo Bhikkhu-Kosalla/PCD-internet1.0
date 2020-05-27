@@ -1145,6 +1145,7 @@ select option {
     display: flex;
     cursor: pointer;
     margin: 0px;
+
 }
 
 
@@ -4335,4 +4336,8 @@ note {
 	}
 #right_tool_bar_title{
     display: grid;
+}
+
+.wbody .case_dropbtn {
+    min-width: 3em;    
 }
