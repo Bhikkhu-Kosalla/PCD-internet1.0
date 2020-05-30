@@ -21,7 +21,7 @@ require_once "../public/function.php";
 		case "logout":
 		{
 			if(isset($_COOKIE["nickname"])){
-				$message_comm = "用户".$_COOKIE["nickname"]."已经退出";
+				$message_comm = $_local->gui->user." ".$_COOKIE["nickname"]." ".$_local->gui->loged_out;
 			}
 			setcookie("uid", "", time()-60,"/");
 			setcookie("username", "", time()-60,"/");
@@ -47,13 +47,13 @@ require_once "../public/function.php";
 		$post_nickname=$_POST["nickname"];
 		$post_email=$_POST["email"];
 		if(empty($post_username)){
-			$error_username = "用户名不能为空";
+			$error_username = $_local->gui->account.$_local->gui->cannot_empty;
 		}
 		if(empty($post_password)){
-			$error_password = "密码不能为空";
+			$error_password = $_local->gui->password.$_local->gui->cannot_empty;
 		}
 		if(empty($post_nickname)){
-			$error_nickname =  "称呼不能为空";
+			$error_nickname = $_local->gui->nick_name.$_local->gui->cannot_empty;
 		}
 		if(!empty($post_username) && !empty($post_password) && !empty($post_nickname)){
 			$md5_password=md5($post_password);
@@ -62,8 +62,8 @@ require_once "../public/function.php";
 			$query = "select * from user where \"username\"=".$PDO->quote($post_username);
 			$Fetch = PDO_FetchAll($query);
 			$iFetch=count($Fetch);
-			if($iFetch>0){//username is exite
-				$error_username = "user name is exite";
+			if($iFetch>0){//username is existed
+				$error_username = $_local->gui->account_existed;
 			}
 			else{
 				$query="INSERT INTO user ('id','userid','username','password','nickname','email') VALUES (NULL,".$PDO->quote($new_userid).",".$PDO->quote($post_username).",".$PDO->quote($md5_password).",".$PDO->quote($post_nickname).",".$PDO->quote($post_email).")";
@@ -99,7 +99,7 @@ require_once "../public/function.php";
 			$_username_ok = true;
 			if($_POST["username"]==""){
 				$_username_ok=false;
-				$_post_error="用户名不能为空";
+				$_post_error=$_local->gui->account.$_local->gui->account_existed;
 			}
 			else if(isset($_POST["password"])){
 				$md5_password=md5($_POST["password"]);
@@ -141,7 +141,7 @@ require_once "../public/function.php";
 					exit;
 				}
 				else{
-					$_post_error="用户名或密码错误";
+					$_post_error=$_local->gui->incorrect_ID_PASS;
 				}
 			}
 		}
@@ -159,92 +159,101 @@ require_once "../public/function.php";
 		<script src="../public/js/comm.js"></script>
 		<script src="../studio/js/jquery-3.3.1.min.js"></script>
 		<script src="../studio/js/fixedsticky.js"></script>
-		<style>
-			#login_body{
-				display: flex;
-				padding: 10em;
-				margin: auto;
-			}
-			#login_left {
-				padding-right: 12em;
-				padding-top: 5em;
-			}
-			.title{
-				font-size: 150%;
-				margin-top: 1em;
-				margin-bottom: 0.5em;
-			}
-			#login_form{
-				padding: 2em 0 1em 0;
-			}
-			#tool_bar {
-				padding: 1em;
-				display: flex;
-				justify-content: space-between;
-			}
-		#login_shortcut {
-			display: flex;
-			flex-direction: column;
-			padding: 2em 0;
-		}
-		#login_shortcut button{
-			height:3em;
-		}
-		#button_area{
-			text-align: right;
-			    padding: 1em 0;
-		}
-		.form_help{
-			font-weight: 300;
-			color: var(--bookx);
-		}
-		.login_form input,select{
-			margin-top:2em;
-			padding:0.5em 0.5em;
-		}
-		.form_error{
-			color:var(--error-text);
-		}
-		#login_form_div{
-			width:30em;
-		}
-		
-		#ucenter_body {
-			display: flex;
-			flex-direction: column;
-			margin: 0;
-			padding: 0;
-			background-color: var(--tool-bg-color3);
-			color: var(--btn-color);
-		}
-		.icon_big {
-			height: 2em;
-			width: 2em;
-			fill: var(--btn-color);
-			transition: all 0.2s ease;
-		}
-		.form_field_name{
-			position: absolute;
-			margin-left: 7px;
-			margin-top: 2em;
-			color: var(--btn-border-line-color);
-			-webkit-transition-duration: 0.4s;
-			-moz-transition-duration: 0.4s;
-			transition-duration: 0.4s;
-			transform: translateY(0.5em);
-		}
-		.viewswitch_on {
-			position: absolute;
-			margin-left: 7px;
-			margin-top: 1.5em;
-			color: var(--bookx);
-			-webkit-transition-duration: 0.4s;
-			-moz-transition-duration: 0.4s;
-			transition-duration: 0.4s;
-			transform: translateY(-15px);
-		}
-		
-		</style>
+<style>
+#login_body{
+	display: flex;
+	padding: 2em;
+	margin: auto;
+}
+#login_left {
+	padding-right: 12em;
+	padding-top: 5em;
+}
+.title{
+	font-size: 150%;
+	margin-top: 1em;
+	margin-bottom: 0.5em;
+}
+#login_form{
+	padding: 2em 0 1em 0;
+}
+#tool_bar {
+	padding: 1em;
+	display: flex;
+	justify-content: space-between;
+}
+#login_shortcut {
+	display: flex;
+	flex-direction: column;
+	padding: 2em 0;
+}
+#login_shortcut button{
+	height:3em;
+}
+#button_area{
+	text-align: right;
+	    padding: 1em 0;
+}
+.form_help{
+	font-weight: 300;
+	color: var(--bookx);
+}
+.login_form input{
+	margin-top:2em;
+	padding:0.5em 0.5em;
+}
+.login_form select{
+	margin-top:2em;
+	padding:0.5em 0.5em;
+}
+.login_form input[type="submit"]{
+	margin-top:2em;
+	padding:0.1em 0.5em;
+} 
+
+.form_error{
+	color:var(--error-text);
+}
+#login_form_div{
+	width:30em;
+}
+
+#ucenter_body {
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+	padding: 0;
+	background-color: var(--tool-bg-color3);
+	color: var(--btn-color);
+}
+.icon_big {
+	height: 2em;
+	width: 2em;
+	fill: var(--btn-color);
+	transition: all 0.2s ease;
+}
+.form_field_name{
+	position: absolute;
+	margin-left: 7px;
+	margin-top: 2em;
+	color: var(--btn-border-line-color);
+	-webkit-transition-duration: 0.4s;
+	-moz-transition-duration: 0.4s;
+	transition-duration: 0.4s;
+	transform: translateY(0.5em);
+}
+.viewswitch_on {
+	position: absolute;
+	margin-left: 7px;
+	margin-top: 1.5em;
+	color: var(--bookx);
+	-webkit-transition-duration: 0.4s;
+	-moz-transition-duration: 0.4s;
+	transition-duration: 0.4s;
+	transform: translateY(-15px);
+}
+
+</style>
 		<script>
 
 		function login_init(){
@@ -284,11 +293,11 @@ require_once "../public/function.php";
 			</svg>
 		</div>	
 		<div style="    padding: 1em 0 0 3.5em;font-weight: 300;">
-		巴利文献编辑平台
+		<?php echo $_local->gui->pali_literature_platform;?>
 		<ul style="padding-left: 1.2em;">
-			<li>线上字典数据库</li>
-			<li>用户数据分享</li>
-			<li>共同协作编辑</li>
+			<li><?php echo $_local->gui->online_dict_db;?></li>
+			<li><?php echo $_local->gui->user_data_share;?></li>
+			<li><?php echo $_local->gui->cooperate_edit;?></li>
 		</ul>
 		</div>
 	</div>	
@@ -308,18 +317,18 @@ require_once "../public/function.php";
 		if($op=="new"){
 		?>
 			<div class="title">
-			创建您的wikipāli账户
+			<?php echo $_local->gui->join_wikipali;?>
 			</div>
 			<div class="login_new">
-				<span class="form_help">已有账户？</span><a href="index.php?language=<?php echo $currLanguage;?>">&nbsp;&nbsp;&nbsp;&nbsp;登入账户</a>
+				<span class="form_help"><?php echo $_local->gui->have_account;?> ？</span><a href="index.php?language=<?php echo $currLanguage;?>">&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $_local->gui->login;//登入账户?></a>
 			</div>
 			<div class="login_form" style="    padding: 3em 0 3em 0;">
 			<form action="index.php" method="post">
 				<div>
-				    <span id='tip_nickname' class='form_field_name'>称呼（昵称）</span>
+				    <span id='tip_nickname' class='form_field_name'><?php echo $_local->gui->nick_name;?></span>
 					<input type="input" name="nickname" value="<?php echo $nickname;?>" />
 					<div class="form_help">
-					其他人看到的您的名字
+					<?php echo $_local->gui->name_for_show;?>
 					</div>
 					<div id="error_nickname" class="form_error">
 					<?php
@@ -327,13 +336,15 @@ require_once "../public/function.php";
 					?>
 					</div>
 					<select name="language" style="width: 100%;">
-						<option>英文</option>
-						<option>简体中文</option>
-						<option>繁体中文</option>
+						<option><?php echo $_local->language->en;?></option>
+						<option><?php echo $_local->language->zh_cn;?></option>
+						<option><?php echo $_local->language->zh_tw;?></option>
+						<option><?php echo $_local->language->my;?></option>
+						<option><?php echo $_local->language->si;?></option>
 					</select>
-					<span id='tip_email' class='form_field_name'>电子邮件地址</span>
+					<span id='tip_email' class='form_field_name'><?php echo $_local->gui->email_address;?></span>
 					<input type="input" name="email"  value="<?php echo $post_email;?>" />
-					<span id='tip_username' class='form_field_name'>账号</span>
+					<span id='tip_username' class='form_field_name'><?php echo $_local->gui->account;?></span>
 					<input type="input" name="username"  value="<?php echo $post_username;?>" />
 					<div id="error_username" class="form_error">
 					<?php
@@ -341,13 +352,13 @@ require_once "../public/function.php";
 					?>
 					</div>
 					<div class="form_help">
-					请使用英文字母和数字。标点符号仅限半角字符。并避免使用下列符号：? ! ; , :
+					<?php echo $_local->gui->account_demond;?>
 					</div>
 					<span id='tip_password' class='form_field_name'><?php echo $_local->gui->password;?></span>
 					<input type="password" name="password"  value="<?php echo $post_password;?>" placeholder="<?php echo $_local->gui->password;?>"/>
-					<input type="password" name="repassword"  value="<?php echo $post_password;?>" placeholder="确认密码"/>
+					<input type="password" name="repassword"  value="<?php echo $post_password;?>" placeholder="<?php echo $_local->gui->password_again;?>"/>
 					<div class="form_help">
-					请混合使用五个字符以上的字母和数字
+					<?php echo $_local->gui->password_demond;?>
 					</div>
 					<div id="error_password" class="form_error">
 					<?php
@@ -357,7 +368,7 @@ require_once "../public/function.php";
 					<input type="hidden" name="op" value="new" />
 				</div>
 				<div id="button_area">
-					<input type="submit" value="继续" style="background-color: var(--link-hover-color);border-color: var(--link-hover-color);" />
+					<input type="submit" value="<?php echo $_local->gui->continue;?>" style="background-color: var(--link-hover-color);border-color: var(--link-hover-color);" />
 				</div>
 				</form>
 			</div>			
@@ -372,21 +383,21 @@ require_once "../public/function.php";
 				echo $_POST["username"];
 			}
 			else{
-				echo "登入账户";
+				echo $_local->gui->login;
 			}
 			?>
 			</div>
 			<div class="login_new">
-				<span class="form_help">新用户？</span><a href="index.php?language=<?php echo $currLanguage;?>&op=new">&nbsp;&nbsp;&nbsp;&nbsp;建立账户</a>
+				<span class="form_help"><?php echo $_local->gui->new_to_wikipali;?> ？</span><a href="index.php?language=<?php echo $currLanguage;?>&op=new">&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $_local->gui->create_account;?></a>
 			</div>
 			
-			<div class="login_form" style="    padding: 3em 0 3em 0;">
+			<div class="login_form" style="padding: 3em 0 3em 0;">
 			<form action="index.php" method="post">
 				<div>
 				<?php
 				if(isset($_POST["username"]) && $_username_ok==true){
-					echo "<span id='tip_password' class='form_field_name'>Password</span>";
-					echo '<input type="password" name="password" placeholder="password"/>';
+					echo "<span id='tip_password' class='form_field_name'>".$_local->gui->password."</span>";
+					echo '<input type="password" name="password" placeholder="'.$_local->gui->password.'"/>';
 					echo "<input type=\"hidden\" name=\"username\" value=\"{$_POST["username"]}\"  />";
 					if(isset($_post_error)){
 						echo '<div id="error_nikename" class="form_error">';
@@ -395,7 +406,7 @@ require_once "../public/function.php";
 					}
 				}
 				else{
-					echo "<span id='tip_username' class='form_field_name'>ID/Email</span>";
+					echo "<span id='tip_username' class='form_field_name'>".$_local->gui->account."/".$_local->gui->e_mail."</span>";
 					echo '<input type="input" name="username" id="input_username" />';
 					if(isset($_post_error)){
 						echo '<div id="error_nikename" class="form_error">';
@@ -406,14 +417,14 @@ require_once "../public/function.php";
 				?>
 				</div>
 				<div id="button_area">
-					<input type="submit" value="继续" style="background-color: var(--link-hover-color);border-color: var(--link-hover-color);" />
+					<input type="submit" value="<?php echo $_local->gui->continue;?>" style="background-color: var(--link-hover-color);border-color: var(--link-hover-color);" />
 				</div>
 				</form>
 			</div>
 			<div id="login_shortcut">
-				<button class="form_help">使用Google登入</button>
-				<button class="form_help">使用Facebook登入</button>
-				<button class="form_help">使用微信登入</button>
+				<button class="form_help"><?php echo $_local->gui->login_with_google;?></button>
+				<button class="form_help"><?php echo $_local->gui->login_with_facebook;?></button>
+				<button class="form_help"><?php echo $_local->gui->login_with_wechat;?></button>
 			</div>			
 			<?php
 		}

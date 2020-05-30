@@ -4,7 +4,8 @@ require_once '../public/config.php';
 /*
 load language file
 范例
-echo $_local->gui->welcome;
+echo $_local->gui->;
+<?php echo $_local->gui->;?>
 */
 if(isset($_GET["language"])){
 	$currLanguage=$_GET["language"];

@@ -32,6 +32,12 @@
 				</button>
 			</div>
 			<div class="dropdown-content" id="menuUseMode">
+				<a onclick="setLang('my')">
+					Myanmar
+				</a>
+				<a onclick="setLang('si')">
+					සිංහල
+				</a>
 				<a onclick="setLang('en')">
 					English
 				</a>

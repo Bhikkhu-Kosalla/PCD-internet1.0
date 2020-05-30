@@ -36,7 +36,6 @@ function file_list_refresh(){
 				html += "<input id='file_id_"+x+"' value='"+file_list[x].id+"' type=\"hidden\" />";
 				html += "</div>";
 				$link="<a href='editor.php?op=open&fileid="+file_list[x].id+"&filename="+file_list[x].file_name+"&language="+g_langrage+"' target='_blank'>";
-			
 				html += "<div class=\"file_list_col_2\">"+$link+file_list[x].title+"</a></div>";
 				html += "<div class=\"file_list_col_3\">";
 				if(file_list[x].parent_id && file_list[x].parent_id.length>10){
