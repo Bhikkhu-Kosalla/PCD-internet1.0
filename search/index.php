@@ -23,7 +23,7 @@ else{
 	<link type="text/css" rel="stylesheet" href="../studio/css/style.css"/>
 	<link type="text/css" rel="stylesheet" href="../studio/css/color_day.css" id="colorchange" />
 	<link type="text/css" rel="stylesheet" href="./css/style.css"/>
-	<title><?php echo $_local->gui->pcd_studio;?></title>
+	<title><?php echo $_local->gui->pcd_studio;?> Search</title>
 	<script language="javascript" src="../studio/js/common.js"></script>
 	<script language="javascript" src="js/search.js"></script>
 	<script language="javascript" src="../pali_sent/pali_sent.js"></script>
